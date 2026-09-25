@@ -1,0 +1,102 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Time (Freeze to 5000)">
+    <!-- Main Engine loop displays $A3..$A5 and decrements $A6,X. Also acts as Oxygen in Level 2. -->
+    <script state="run">
+      <action>maincpu.pb@00A3=05</action>
+      <action>maincpu.pb@00A4=00</action>
+      <action>maincpu.pb@00A5=00</action>
+      <action>maincpu.pb@00A6=05</action>
+      <action>maincpu.pb@00A7=05</action>
+      <action>maincpu.pb@00A8=00</action>
+      <action>maincpu.pb@00A9=00</action>
+      <action>maincpu.pb@00AA=05</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Stop Timer Decrement (All Levels)" tempvariables="2">
+    <!-- Patches $0D79: DEC $A6,X -> NOP NOP to prevent countdown -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@0D79</action>
+      <action>temp1 =maincpu.mb@0D7A</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@0D79=EA</action>
+      <action>maincpu.mb@0D7A=EA</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@0D79=temp0 </action>
+      <action>maincpu.mb@0D7A=temp1 </action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="P1 Infinite Lives">
+    <!-- Address $0042 holds Player 1 remaining lives (max 9 displayable) -->
+    <script state="run">
+      <action>maincpu.pb@0042=09</action>
+    </script>
+  </cheat>
+
+  <cheat desc="P2 Infinite Lives">
+    <!-- Address $0043 holds Player 2 remaining lives (max 9 displayable) -->
+    <script state="run">
+      <action>maincpu.pb@0043=09</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Invincibility (Level 1: No Monkey Collision)" tempvariables="4">
+    <!-- Patches Level 1 rope monkey hit jump from $7B8C to $7B47 -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@7B3E</action>
+      <action>temp1 =maincpu.mb@7B3F</action>
+      <action>temp2 =maincpu.mb@7B45</action>
+      <action>temp3 =maincpu.mb@7B46</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@7B3E=47</action>
+      <action>maincpu.mb@7B3F=7B</action>
+      <action>maincpu.mb@7B45=47</action>
+      <action>maincpu.mb@7B46=7B</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@7B3E=temp0 </action>
+      <action>maincpu.mb@7B3F=temp1 </action>
+      <action>maincpu.mb@7B45=temp2 </action>
+      <action>maincpu.mb@7B46=temp3 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility (Level 1: Pit Fall Protection)" tempvariables="1">
+    <!-- Patches $7B9F: BCC $7BBD -> BCS $7BBD to avoid falling death -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@7B9F</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@7B9F=B0</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@7B9F=temp0 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Never Lose Lives on Death (Level 1)" tempvariables="2">
+    <!-- Patches $7BD3: DEC $41,X -> NOP NOP -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@7BD3</action>
+      <action>temp1 =maincpu.mb@7BD4</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@7BD3=EA</action>
+      <action>maincpu.mb@7BD4=EA</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@7BD3=temp0 </action>
+      <action>maincpu.mb@7BD4=temp1 </action>
+    </script>
+  </cheat>
+
+</mamecheat>

@@ -1,0 +1,81 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Time">
+    <script state="run">
+      <action>maincpu.pb@842F=99</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Oxygen">
+    <script state="run">
+      <action>maincpu.pb@8457=30</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility" tempvariables="14">
+    <script state="on">
+      <action>temp0 =maincpu.mb@1A6F</action>
+      <action>temp1 =maincpu.mb@196F</action>
+      <action>temp2 =maincpu.mb@1A98</action>
+      <action>temp3 =maincpu.mb@287A</action>
+      <action>temp4 =maincpu.mw@3886</action>
+      <action>temp5 =maincpu.mb@3889</action>
+      <action>temp6 =maincpu.mb@3EA9</action>
+      <action>temp7 =maincpu.mb@3ED8</action>
+      <action>temp8 =maincpu.mb@3F97</action>
+      <action>temp9 =maincpu.mb@1F13</action>
+      <action>temp10=maincpu.mb@1968</action>
+      <action>temp11=maincpu.mb@1A1C</action>
+      <action>temp12=maincpu.mb@73D0</action>
+      <action>temp13=maincpu.mb@76BE</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@1A6F=00</action> <!-- Ropes Across -->
+      <action>maincpu.mb@196F=18</action> <!-- Rope Monkey 1 -->
+      <action>maincpu.mb@1A98=18</action> <!-- Ropes Fall -->
+      <action>maincpu.mb@287A=18</action> <!-- Crocodiles -->
+      <action>maincpu.mw@3886=0029</action> <!-- Lava Rocks 1 -->
+      <action>maincpu.mb@3889=18</action> <!-- Lava Rocks 2 -->
+      <action>maincpu.mb@3EA9=C3</action> <!-- Warrior 2 -->
+      <action>maincpu.mb@3ED8=C3</action> <!-- Warrior 1 -->
+      <action>maincpu.mb@3F97=C3</action> <!-- Cauldron 1 -->
+      <action>maincpu.mb@1F13=18</action> <!-- Rope Time -->
+      <action>maincpu.mb@1968=18</action> <!-- Rope Monkey 2 -->
+      <action>maincpu.mb@1A1C=18</action> <!-- Rope Monkey 3 -->
+      <action>maincpu.mb@73D0=C3</action> <!-- Cauldron 2 -->
+      <action>maincpu.mb@76BE=C3</action> <!-- Warrior 2 -->
+    </script>
+    <script state="off">
+      <action>maincpu.mb@1A6F=temp0 </action>
+      <action>maincpu.mb@196F=temp1 </action>
+      <action>maincpu.mb@1A98=temp2 </action>
+      <action>maincpu.mb@287A=temp3 </action>
+      <action>maincpu.mw@3886=temp4 </action>
+      <action>maincpu.mb@3889=temp5 </action>
+      <action>maincpu.mb@3EA9=temp6 </action>
+      <action>maincpu.mb@3ED8=temp7 </action>
+      <action>maincpu.mb@3F97=temp8 </action>
+      <action>maincpu.mb@1F13=temp9 </action>
+      <action>maincpu.mb@1968=temp10</action>
+      <action>maincpu.mb@1A1C=temp11</action>
+      <action>maincpu.mb@73D0=temp12</action>
+      <action>maincpu.mb@76BE=temp13</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="P1 Infinite Lives">
+    <script state="run">
+      <action>maincpu.pb@8425=1F</action>
+    </script>
+  </cheat>
+
+  <cheat desc="P2 Infinite Lives">
+    <script state="run">
+      <action>maincpu.pb@8426=1F</action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->
