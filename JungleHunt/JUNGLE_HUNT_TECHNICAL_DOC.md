@@ -326,8 +326,37 @@ Chaque niveau est un module binaire indépendant compilé pour résider à l'adr
   Le chronomètre et la réserve d'oxygène restent ainsi indéfiniment gelés.
 
 ### Invulnérabilité Niveau 1 (Singes & Chute)
-1. **Immunité aux Singes** : À l'adresse `$7B3E`, modifier la cible de saut de collision pour brancher directement sur la reprise normale (`$7B47`).
-2. **Protection contre les chutes** : À l'adresse `$7B9F`, changer `BCC $7BBD` (`90`) en `BCS $7BBD` (`B0`).
+1. **Immunité aux Singes (Analyse détaillée du désassemblage)** :
+   La routine de test de collision avec le singe débute à **`$7B1D`** :
+   ```assembly
+   7B1D: A0 00       LDY #$00       ; Pointeur d'offset 0 dans Y
+   7B1F: B1 84       LDA ($84),Y    ; Lit l'état du singe via le vecteur ($84)
+   7B21: C9 02       CMP #$02       ; Le singe est-il menaçant / actif (#$02) ?
+   7B23: D0 22       BNE $7B47      ; Si non menaçant, saute vers la suite ($7B47) -> Pas de collision
+   7B25: AD BE 13    LDA $13BE      ; Coordonnée verticale Y de Dudley
+   7B28: 18          CLC 
+   7B29: 69 14       ADC #$14       ; Demi-hauteur de boîte de collision (+20 px)
+   7B2B: CD A3 13    CMP $13A3      ; Compare avec la coordonnée Y du singe
+   7B2E: 90 17       BCC $7B47      ; Dudley au-dessus du singe : saute vers $7B47 (pas de contact)
+   7B30: AD A1 13    LDA $13A1      ; Coordonnée horizontale X du singe
+   7B33: 38          SEC 
+   7B34: ED BC 13    SBC $13BC      ; Delta X = Singe X - Dudley X
+   7B37: 30 07       BMI $7B40      ; Si Dudley est à droite, teste borne négative
+   7B39: C9 14       CMP #$14       ; Compare l'écart à la largeur (+20 px)
+   7B3B: B0 0A       BCS $7B47      ; Dudley trop loin à gauche : saute vers $7B47
+   7B3D: 4C 8C 7B    JMP $7B8C      ; <--- COLLISION CONFIRMÉE ! Saute vers la mort de Dudley ($7B8C)
+   7B40: C9 EC       CMP #$EC       ; Test borne négative (-20 px en signé = $EC)
+   7B42: 90 03       BCC $7B47      ; Dudley trop loin à droite : saute vers $7B47
+   7B44: 4C 8C 7B    JMP $7B8C      ; <--- COLLISION CONFIRMÉE ! Saute vers la mort de Dudley ($7B8C)
+   7B47: 20 34 7D    JSR $7D34      ; --- SUITE NORMALE --- Rendu graphique si pas d'impact
+   ```
+   > [!NOTE]
+   > **Note sur le désalignement à `$7B3E`** :  
+   > L'instruction à `$7B3D` est `4C 8C 7B` (`JMP $7B8C`). Ses octets d'opérande sont situés à `$7B3E` (`$8C`) et `$7B3F` (`$7B`).  
+   > Le cheat MAME patche ces deux octets en `$47 $7B` (et de même pour le saut alternatif à `$7B44` via `$7B45..$7B46`), ce qui transforme l'instruction en `4C 47 7B` (`JMP $7B47`), neutralisant instantanément la collision !  
+   > Si un désassembleur commence naïvement son analyse à l'adresse du patch `$7B3E` au lieu du début de l'instruction (`$7B3D`), il découpe `8C 7B C9` en `STY $C97B`. Il s'agissait d'un pur artefact de désalignement d'un octet, et en aucun cas d'une écriture en ROM.
+2. **Protection contre les chutes** : À l'adresse `$7B9F`, l'instruction `90 1C` (`BCC $7BBD`) teste si la chute libre de Dudley atteint le fond du ravin (`$AF`). Remplacer le code opcode `90` (BCC) par `B0` (BCS) fait flotter le personnage au-dessus de la fosse sans mourir.
+3. **Vies infinies en collision** : À l'adresse `$7BD3`, l'instruction `D6 41` (`DEC $41,X`) décrémente les vies du joueur actif. Remplacer ces deux octets par `EA EA` (`NOP NOP`) préserve intégralement le stock de vies.
 
 ### Équivalences des Fichiers Cheats MAME
 

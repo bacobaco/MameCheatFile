@@ -49,7 +49,7 @@
   <cheat desc=" "/>
 
   <cheat desc="Invincibility (Level 1: No Monkey Collision)" tempvariables="4">
-    <!-- Patches Level 1 rope monkey hit jump from $7B8C to $7B47 -->
+    <!-- Patches target of JMP $7B8C at $7B3D (operands $7B3E..$7B3F) and $7B44 (operands $7B45..$7B46) to JMP $7B47, bypassing monkey collision death routine -->
     <script state="on">
       <action>temp0 =maincpu.mb@7B3E</action>
       <action>temp1 =maincpu.mb@7B3F</action>

@@ -28,7 +28,8 @@ MameCheatFile/
 │   ├── JUNGLE_HUNT_TECHNICAL_DOC.md# Dossier technique complet (Memory map, protection, architecture)
 │   ├── junghunt.xml                # Fichier Cheat MAME pour la version Apple II (driver 'apple2p' / 'apple2ee')
 │   ├── junglek.xml                 # Fichier Cheat MAME pour la version Arcade (driver 'junglek')
-│   ├── junglehunt_complete_reverse.html # Désassemblage interactif HTML complet du jeu
+│   ├── junglehunt_complete_reverse.html # Désassemblage interactif HTML complet du jeu (Multi-niveaux)
+│   ├── level1_vines_reverse.html        # Reverse interactif Niveau 1 (Jungle aux lianes)
 │   ├── level2_crocodiles_reverse.html   # Reverse interactif Niveau 2 (Rivière aux crocodiles)
 │   ├── level3_boulders_reverse.html     # Reverse interactif Niveau 3 (Rochers)
 │   ├── level4_cannibals_reverse.html    # Reverse interactif Niveau 4 (Marmite & cannibales)

@@ -46,48 +46,32 @@ SPRITE_TRIGGERS = {
 
 MODULE_DATA_RANGES = {
     "main": [
-        (0x1300, 0x131F, "Table des 16 Vecteurs d'API vers $6000", 16),
-        (0x1320, 0x13FF, "Tables de constantes du moteur et scoring", 16),
-        (0x1F00, 0x1FFF, "Tampon de swap / sauvegarde de la Page Zéro", 16),
+        (0x12E9, 0x13FF, "Tables de constantes du moteur, vecteurs et scoring", 16),
+        (0x151B, 0x15C6, "Données d'étalonnage et tables paddle/clavier", 16),
+        (0x1715, 0x17D2, "Tables de texte et chaîne du High Score", 16),
+        (0x1814, 0x1CFF, "Tampon de transit mémoire & zones de travail", 16),
+        (0x1D74, 0x20FF, "Tampon de swap Page Zéro ($1F00-$1FFF) & padding", 16),
     ],
     "hires": [
+        (0x600E, 0x618D, "Table des adresses des 192 lignes Hi-Res", 16),
         (0x6199, 0x63C8, "Table des décalages de lignes Hi-Res entrelacées", 16),
         (0x63D4, 0x64EB, "Table de conversion Y et masquage d'écran", 16),
-        (0x67E0, 0x6B4F, "Tables de fréquences audio et timbres sonores", 16),
-        (0x6C60, 0x7000, "Polices de caractères et données graphiques", 16),
-        (0x7500, 0x76FF, "Tampons de transit audio et coordonnées", 16),
+        (0x6963, 0x6B0A, "Tables de fréquences audio, notes et timbres sonores", 16),
+        (0x6C9E, 0x7000, "Polices de caractères et tables de caractères graphiques", 16),
+        (0x74DE, 0x78FF, "Tampons de transit audio et coordonnées", 16),
     ],
     "l1": [
-        (0x7DF8, 0x7FFF, "Tables de trajectoire & physique des lianes (oscillations)", 16),
-        (0x8000, 0x809F, "Table des descripteurs & pointeurs de sprites", 16),
-        (0x80A0, 0x84CE, "Données graphiques secondaires et masques", 16),
-        (0x84CF, 0x8DBE, "Données des sprites de Dudley (liane, saut, balancement)", 16),
-        (0x8DBF, 0x93FF, "Données des sprites de singes et cordes", 16),
-        (0x9400, 0x96FF, "Tampon de transit mémoire & padding disquette", 16),
+        (0x7BFD, 0x7C0F, "Table des offsets de trajectoire de chute", 16),
+        (0x7DF8, 0x96FF, "Tables de trajectoire des lianes et sprites Hi-Res de Dudley et singes", 16),
     ],
     "l2": [
-        (0x7CC8, 0x7EAF, "Tables de courant aquatique, vagues et oxygène", 16),
-        (0x7EB0, 0x80A7, "Données des sprites de Dudley à la nage", 16),
-        (0x80A8, 0x8700, "Données des sprites de crocodiles et mâchoires", 16),
-        (0x8701, 0x918D, "Répertoire de pointeurs & tables de spawn aléatoire", 16),
-        (0x918E, 0x9A00, "Données des sprites de crocodiles rapides & bulles", 16),
-        (0x9A01, 0xA480, "Tables dynamiques et états d'animation sous-marine", 16),
+        (0x7CC8, 0xA6FF, "Tables d'animation aquatique, masques et sprites des crocodiles", 16),
     ],
     "l3": [
-        (0x7D02, 0x7FFF, "Tables de trajectoire parabolique et rebond des rochers", 16),
-        (0x8000, 0x807F, "Table des descripteurs & pointeurs de sprites des rochers", 16),
-        (0x8080, 0x85F7, "Données graphiques des rochers moyens", 16),
-        (0x85F8, 0x8897, "Données du grand rocher rebondissant et Dudley", 16),
-        (0x8898, 0x93FF, "Données du petit rocher roulant et poussières", 16),
-        (0x9400, 0x96FF, "Tampon de transit mémoire & padding disquette", 16),
+        (0x7D02, 0x96FF, "Tables de physique des rochers, trajectoires et sprites Hi-Res", 16),
     ],
     "l4": [
-        (0x7CCE, 0x7FFF, "Tables de chorégraphie des cannibales et flammes", 16),
-        (0x8000, 0x805F, "Table des descripteurs & pointeurs de sprites du village", 16),
-        (0x8060, 0x85B5, "Données des guerriers cannibales et lances", 16),
-        (0x85B6, 0x8855, "Données de la captive / jeune femme suspendue", 16),
-        (0x8856, 0x93FF, "Données de la marmite et du feu de camp", 16),
-        (0x9400, 0x96FF, "Tampon de transit mémoire & padding disquette", 16),
+        (0x7CCE, 0x96FF, "Tables d'animation des flammes et sprites des cannibales / marmite", 16),
     ],
 }
 
@@ -199,49 +183,59 @@ LEVEL_LABELS = {
         0x7800: "L1_SWING_VINES_PHYSICS",
         0x7900: "L1_UPDATE_DUDLEY_POSITION",
         0x7B00: "L1_UPDATE_MONKEYS_ROUTINE",
-        0x7B3E: "L1_CHECK_MONKEY_COLLISION",
+        0x7B1D: "L1_START_MONKEY_COLLISION_CHECK",
+        0x7B25: "L1_CHECK_MONKEY_COLLISION_BOX",
+        0x7B3D: "L1_TRIGGER_MONKEY_COLLISION_DEATH",
+        0x7B44: "L1_TRIGGER_MONKEY_COLLISION_DEATH_ALT",
         0x7B47: "L1_RESUME_AFTER_MONKEY_PASS",
-        0x7B9F: "L1_CHECK_FALLING_INTO_PIT",
-        0x7BBD: "L1_TRIGGER_PIT_FALL_DEATH",
-        0x7BD3: "L1_SUBTRACT_LIFE_ON_DEATH",
-        0x7C00: "L1_STAGE_COMPLETION_TEST",
+        0x7B8C: "L1_HANDLE_MONKEY_HIT_DEATH",
+        0x7B97: "L1_START_PIT_FALL_CHECK",
+        0x7B9F: "L1_TEST_PIT_FALL_BRANCH",
+        0x7BBD: "L1_EXIT_PIT_CHECK",
+        0x7BD1: "L1_START_LIFE_SUBTRACTION",
+        0x7BD3: "L1_DEC_LIFE_ACTIVE_PLAYER",
+        0x7BE6: "L1_TEST_STAGE_COMPLETION",
+        0x7BF5: "L1_STAGE_CLEAR_NEXT_LEVEL",
     },
     "l2": {
         0x7700: "L2_INIT_RIVER_STAGE",
         0x7730: "L2_MAIN_UNDERWATER_LOOP",
         0x77B8: "L2_UPDATE_WATER_SURFACE_CURRENT",
-        0x7839: "L2_SWIM_CONTROLS_AND_PHYSICS",
-        0x7900: "L2_SPAWN_AND_UPDATE_CROCODILES",
-        0x7A84: "L2_ANIMATE_CROCODILE_JAWS",
-        0x7B20: "L2_KNIFE_ATTACK_CROCODILE",
-        0x7C50: "L2_CHECK_CROCODILE_BITE_COLLISION",
-        0x7D00: "L2_HANDLE_DUDLEY_UNDERWATER_DEATH",
-        0x7E10: "L2_UPDATE_OXYGEN_GAUGE_TICK",
-        0x7F00: "L2_SURFACE_BREATH_REPLENISH_OXYGEN",
-        0x8100: "L2_STAGE_CLEAR_RIVER_EXIT",
+        0x78E5: "L2_SWIM_CONTROLS_AND_PHYSICS",
+        0x792D: "L2_UPDATE_OXYGEN_GAUGE_TICK",
+        0x7956: "L2_SURFACE_BREATH_REPLENISH_OXYGEN",
+        0x79B1: "L2_SPAWN_AND_UPDATE_CROCODILES",
+        0x7AFF: "L2_ANIMATE_CROCODILE_JAWS",
+        0x7B2A: "L2_KNIFE_ATTACK_CROCODILE",
+        0x7B8C: "L2_CHECK_CROCODILE_BITE_COLLISION",
+        0x7BE6: "L2_HANDLE_DUDLEY_UNDERWATER_DEATH",
+        0x7C03: "L2_STAGE_CLEAR_RIVER_EXIT",
+        0x7CA6: "L2_RENDER_OXYGEN_BAR",
     },
     "l3": {
         0x7700: "L3_INIT_BOULDER_HILL_STAGE",
         0x7740: "L3_MAIN_HILL_ASCENT_LOOP",
-        0x77DD: "L3_UPDATE_HILL_SLOPE_SCROLLING",
-        0x78A0: "L3_BOULDER_BOUNCE_PHYSICS_BIG",
-        0x7960: "L3_BOULDER_ROLL_PHYSICS_SMALL",
-        0x7A50: "L3_DUDLEY_JUMP_AND_DUCK_CONTROLS",
-        0x7B80: "L3_UPDATE_BOULDER_SHAPES_ANIM",
-        0x7C80: "L3_CHECK_BOULDER_CRUSH_COLLISION",
-        0x7D90: "L3_HANDLE_BOULDER_DEATH",
-        0x7EA0: "L3_STAGE_CLEAR_REACH_SUMMIT",
+        0x7762: "L3_UPDATE_HILL_SLOPE_SCROLLING",
+        0x77AE: "L3_SPAWN_BOULDERS_ROUTINE",
+        0x78FB: "L3_BOULDER_BOUNCE_PHYSICS_BIG",
+        0x795D: "L3_BOULDER_ROLL_PHYSICS_SMALL",
+        0x7AE5: "L3_DUDLEY_JUMP_AND_DUCK_CONTROLS",
+        0x7B1C: "L3_UPDATE_BOULDER_SHAPES_ANIM",
+        0x7B8F: "L3_CHECK_BOULDER_CRUSH_COLLISION",
+        0x7C2E: "L3_HANDLE_BOULDER_DEATH",
+        0x7CE2: "L3_STAGE_CLEAR_REACH_SUMMIT",
     },
     "l4": {
         0x7700: "L4_INIT_CANNIBAL_VILLAGE_STAGE",
-        0x7736: "L4_MAIN_VILLAGE_LOOP",
-        0x7820: "L4_UPDATE_VILLAGE_PATROLS",
-        0x7920: "L4_ANIMATE_MAIDEN_IN_POT",
-        0x7A80: "L4_CANNIBAL_SPEAR_THRUST_AI",
-        0x7B60: "L4_CHECK_SPEAR_THRUST_COLLISION",
-        0x7C90: "L4_HANDLE_SPEAR_DEATH",
-        0x7DF0: "L4_RESCUE_MAIDEN_VICTORY_ROUTINE",
-        0x7E80: "L4_CYCLE_COMPLETION_SPEED_INCREASE",
+        0x7733: "L4_MAIN_VILLAGE_LOOP",
+        0x78EC: "L4_UPDATE_VILLAGE_PATROLS",
+        0x7A2A: "L4_ANIMATE_MAIDEN_IN_POT",
+        0x7A8E: "L4_CANNIBAL_SPEAR_THRUST_AI",
+        0x7AF8: "L4_DUDLEY_JUMP_OVER_SPEARS",
+        0x7B53: "L4_CHECK_SPEAR_THRUST_COLLISION",
+        0x7B9A: "L4_HANDLE_SPEAR_DEATH",
+        0x7C2D: "L4_RESCUE_MAIDEN_VICTORY_ROUTINE",
+        0x7CA1: "L4_CYCLE_COMPLETION_SPEED_INCREASE",
     }
 }
 
@@ -438,7 +432,7 @@ ROUTINE_DOCS = {
         "gameplay": "Lancement du Niveau 1.",
         "cheat": None
     },
-    "L1_7B3E": {
+    "L1_7B1D": {
         "title": "Niveau 1 : Test Collision Singes (L1_CHECK_MONKEY_COLLISION)",
         "role": "Vérifie si Dudley entre en collision avec un singe grimpant sur la corde en cours d'accrochage.",
         "inputs": "Coordonnées de Dudley et des singes.",
@@ -472,7 +466,7 @@ ROUTINE_DOCS = {
         "gameplay": "Lancement du Niveau 2 sous l'eau.",
         "cheat": None
     },
-    "L2_7B20": {
+    "L2_7B2A": {
         "title": "Niveau 2 : Coup de Poignard (L2_KNIFE_ATTACK_CROCODILE)",
         "role": "Vérifie l'appui sur le bouton tir pour donner un coup de poignard vers l'avant. Tue les crocodiles à gueule fermée.",
         "inputs": "Bouton manette ou barre espace.",
@@ -480,7 +474,7 @@ ROUTINE_DOCS = {
         "gameplay": "Défense active contre les reptiles.",
         "cheat": None
     },
-    "L2_7C50": {
+    "L2_7B8C": {
         "title": "Niveau 2 : Collision Crocodile (L2_CHECK_CROCODILE_BITE_COLLISION)",
         "role": "Vérifie si Dudley touche un crocodile à gueule ouverte ou par l'arrière, provoquant une morsure mortelle.",
         "inputs": "Positions relatives Dudley et crocodiles.",
@@ -488,7 +482,7 @@ ROUTINE_DOCS = {
         "gameplay": "Danger principal du niveau sous-marin.",
         "cheat": "POINT DE TRICHE : Bypass du saut pour immunité totale aux morsures de crocodiles !"
     },
-    "L2_7E10": {
+    "L2_792D": {
         "title": "Niveau 2 : Épuisement Oxygène (L2_UPDATE_OXYGEN_GAUGE_TICK)",
         "role": "Décompte la jauge d'air respirable quand Dudley est immergé. Déclenche la noyade si la jauge atteint zéro.",
         "inputs": "Chronomètre d'immersion.",
@@ -506,7 +500,7 @@ ROUTINE_DOCS = {
         "gameplay": "Lancement du Niveau 3.",
         "cheat": None
     },
-    "L3_78A0": {
+    "L3_78FB": {
         "title": "Niveau 3 : Physique Grands Rochers (L3_BOULDER_BOUNCE_PHYSICS_BIG)",
         "role": "Calcule la trajectoire parabolique des gros rochers rebondissant au-dessus de Dudley.",
         "inputs": "Vecteurs gravitationnels et sol.",
@@ -514,7 +508,7 @@ ROUTINE_DOCS = {
         "gameplay": "Nécessite de se baisser (DUCK) pour les laisser passer.",
         "cheat": None
     },
-    "L3_7C80": {
+    "L3_7B8F": {
         "title": "Niveau 3 : Écrasement Rocher (L3_CHECK_BOULDER_CRUSH_COLLISION)",
         "role": "Détecte si un rocher (petit ou grand) percute Dudley de plein fouet pendant sa course.",
         "inputs": "Coordonnées de collision.",
@@ -532,7 +526,7 @@ ROUTINE_DOCS = {
         "gameplay": "Lancement du Niveau 4 final.",
         "cheat": None
     },
-    "L4_7920": {
+    "L4_7A2A": {
         "title": "Niveau 4 : Animation Fille dans la Marmite (L4_ANIMATE_MAIDEN_IN_POT)",
         "role": "Gère le mouvement vertical de descente et montée de la corde suspendant la demoiselle au-dessus du chaudron.",
         "inputs": "Cycle de frame.",
@@ -540,7 +534,7 @@ ROUTINE_DOCS = {
         "gameplay": "Fenêtre d'opportunité pour le saut de sauvetage.",
         "cheat": None
     },
-    "L4_7B60": {
+    "L4_7B53": {
         "title": "Niveau 4 : Collision Lances Cannibales (L4_CHECK_SPEAR_THRUST_COLLISION)",
         "role": "Teste l'impact entre Dudley et les pointes des lances dressées par les indigènes en ronde.",
         "inputs": "Position de Dudley et des pointes de lance.",
@@ -548,7 +542,7 @@ ROUTINE_DOCS = {
         "gameplay": "Obstacle à sauter pour atteindre la marmite.",
         "cheat": "POINT DE TRICHE : Bypass de la blessure de lance pour traverser le village !"
     },
-    "L4_7DF0": {
+    "L4_7C2D": {
         "title": "Niveau 4 : Sauvetage de la Demoiselle & Victoire (L4_RESCUE_MAIDEN_VICTORY_ROUTINE)",
         "role": "Déclenché quand Dudley attrape la jeune femme en plein vol. Joue le jingle de félicitations, attribue le bonus et boucle le jeu avec vitesse accrue.",
         "inputs": "Saut réussi sur la fille.",
@@ -561,6 +555,8 @@ ROUTINE_DOCS = {
 # =============================================================================
 # ANNOTATIONS LIGNE PAR LIGNE DÉTAILLÉES
 # =============================================================================
+
+# Charge automatiquement toutes les annotations de consolidated_annotations.json
 DETAILED_LINE_COMMENTS = {
     0x0A70: "Initialisation Power-Up : JSR $FB6F reconfigure le vecteur Reset $03F2 pour interdire le redémarrage intempestif",
     0x0A73: "Appel de la routine de remise à zéro du moteur et de l'affichage ($0A91)",
@@ -619,11 +615,33 @@ DETAILED_LINE_COMMENTS = {
     0x7700: "Niveau 1 : Initialisation des arbres, cordes de lianes et singes",
     0x7800: "Physique des lianes : calcule l'oscillation angulaire des cordes selon le chronomètre",
     0x7900: "Physique de Dudley : gère le balancement accroché à la corde et le décrochage",
-    0x7B3E: "Test contact singe : compare la hauteur de Dudley avec celle du singe sur la corde",
-    0x7B45: "Si contact, saute vers la routine de chute mortelle ($7B8C) ; bypassable vers $7B47",
-    0x7B9F: "BCC $7BBD : Test si Dudley est tombé dans le trou ; inverser en BCS pour immunité chute",
-    0x7BD3: "DEC $41,X : SOUSTRAIT UNE VIE LORS DU DÉCÈS -> Patch NOP NOP pour invulnérabilité !",
+    0x7B1D: "LDY #$00 : Début du test de collision singe -> initialise l'offset 0",
+    0x7B21: "CMP #$02 : Vérifie si le singe est en état d'attaque menaçant (#$02)",
+    0x7B25: "LDA $13BE : Charge la coordonnée verticale Y de Dudley",
+    0x7B30: "LDA $13A1 : Charge la coordonnée horizontale X du singe",
+    0x7B37: "BMI $7B40 : Si Dudley est à droite du singe, teste la borne négative",
+    0x7B3D: "JMP $7B8C : 💥 [COLLISION SINGE 1] Déclenche la mort de Dudley ($7B8C) ! [TRICHE MAME : patcher opérande $7B3E..$7B3F vers $7B47]",
+    0x7B40: "CMP #$EC : Test borne négative de collision (-20 pixels)",
+    0x7B44: "JMP $7B8C : 💥 [COLLISION SINGE 2] Déclenche la mort de Dudley ($7B8C) ! [TRICHE MAME : patcher opérande $7B45..$7B46 vers $7B47]",
+    0x7B47: "JSR $7D34 : --- PAS DE COLLISION --- Poursuit le cycle d'affichage normal du Niveau 1",
+    0x7B8C: "LDA #$05 : Déclenchement de l'animation de chute mortelle de Dudley",
+    0x7B9F: "BCC $7BBD : [TEST CHUTE FOSSE] Si encore au-dessus du fond ($AF), saute vers RTS [TRICHE MAME : inverser BCC en BCS]",
+    0x7BD3: "DEC $41,X : [PERTE DE VIE NIVEAU 1] Décrémente les vies du joueur ! [TRICHE MAME : patcher en NOP NOP]",
+    0x7BF5: "INC $36 : 🎉 [STAGE CLEAR NIVEAU 1] Déclenche le passage au Niveau 2 !",
 }
+
+# Charge automatiquement toutes les annotations de consolidated_annotations.json
+ann_json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "consolidated_annotations.json")
+if os.path.exists(ann_json_path):
+    with open(ann_json_path, "r", encoding="utf-8") as _f_ann:
+        _loaded_ann = json.load(_f_ann)
+    for _k, _v in _loaded_ann.items():
+        try:
+            _addr_int = int(_k, 16)
+            if _addr_int not in DETAILED_LINE_COMMENTS:
+                DETAILED_LINE_COMMENTS[_addr_int] = _v
+        except ValueError:
+            pass
 
 # =============================================================================
 # DÉSASSEMBLAGE INTELLIGENT AVEC SYNCHRONISATION DES POINTS D'ENTRÉE
@@ -903,9 +921,20 @@ def build_master_html():
 
         print(f"[*] Traitement de {mod['title']} ({len(raw_data):,} octets)...")
 
-        # Désassemblage intelligent avec points d'entrée
+        # Collecte des points d'entrée spécifiques à ce module uniquement (évite les collisions d'adresses entre niveaux)
+        mod_eps = set()
+        if mod["id"] == "main":
+            mod_eps.update(k for k in SEMANTIC_LABELS.keys() if 0x0A00 <= k < 0x2000)
+        elif mod["id"] == "gfx":
+            mod_eps.update(k for k in SEMANTIC_LABELS.keys() if 0x6000 <= k < 0x7700)
+        elif mod["id"] in LEVEL_LABELS:
+            mod_eps.update(LEVEL_LABELS[mod["id"]].keys())
+        if mod["id"] in SPRITE_TRIGGERS:
+            mod_eps.add(SPRITE_TRIGGERS[mod["id"]])
+
+        # Désassemblage intelligent avec points d'entrée locaux
         ranges = MODULE_DATA_RANGES.get(mod["id"], [])
-        instrs = smart_disasm(raw_data, mod["start"], known_eps_global, mod["prefix"], ranges)
+        instrs = smart_disasm(raw_data, mod["start"], mod_eps, mod["prefix"], ranges)
 
         # Collecte des XREFs locales
         mod_xrefs = {}
