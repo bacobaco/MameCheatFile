@@ -110,8 +110,13 @@ class Disassembler6502:
                 data = json.load(f)
                 for k, v in data.items():
                     try:
-                        addr = int(k, 16) if isinstance(k, str) else int(k)
-                        self.annotations[addr] = v
+                        if isinstance(k, str) and "_" in k:
+                            _, hex_part = k.split("_", 1)
+                            addr = int(hex_part, 16)
+                        else:
+                            addr = int(k, 16) if isinstance(k, str) else int(k)
+                        if addr not in self.annotations or len(v) > len(self.annotations[addr]):
+                            self.annotations[addr] = v
                     except ValueError:
                         pass
         else:

@@ -636,6 +636,7 @@ if os.path.exists(ann_json_path):
     with open(ann_json_path, "r", encoding="utf-8") as _f_ann:
         _loaded_ann = json.load(_f_ann)
     for _k, _v in _loaded_ann.items():
+        DETAILED_LINE_COMMENTS[_k] = _v
         try:
             _addr_int = int(_k, 16)
             if _addr_int not in DETAILED_LINE_COMMENTS:
@@ -1429,7 +1430,13 @@ def build_master_html():
     .code-line:hover { background: #16202e; }
     .code-line.active {
       background: var(--active-line) !important;
-      border-left: 3px solid #38bdf8;
+      border-left: 3px solid #38bdf8 !important;
+      animation: linePulse 1.2s ease-out;
+    }
+
+    @keyframes linePulse {
+      0% { background: rgba(56, 189, 248, 0.5) !important; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+      100% { background: var(--active-line) !important; box-shadow: none; }
     }
 
     .label-line {
@@ -1472,9 +1479,15 @@ def build_master_html():
       text-decoration: none;
       border-bottom: 1px dotted #0284c7;
       cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s ease;
     }
 
-    .target-link:hover { color: #fff; border-bottom: 1px solid #fff; }
+    .target-link:hover {
+      color: #ffffff;
+      border-bottom: 1px solid #38bdf8;
+      text-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+    }
 
     .vec-resolved {
       color: #4ade80;
@@ -2126,7 +2139,7 @@ def build_master_html():
 
             # Si c'est un paquet de DONNÉES PURES (non exécutable)
             if not instr["is_code"]:
-                comment_text = DETAILED_LINE_COMMENTS.get(addr, "")
+                comment_text = DETAILED_LINE_COMMENTS.get(dom_id, "") or DETAILED_LINE_COMMENTS.get(addr, "")
                 comment_html = f'<span class="line-comment data-comment">; {comment_text}</span>' if comment_text else ""
                 h.append(f"""        <div class="code-line data-line" id="{dom_id}" data-addr="{addr_hex}" data-module="{mod_id}">
           <span class="line-addr"><a href="#{dom_id}" style="color:inherit; text-decoration:none;" onclick="handleLinkClick(event, null, '{dom_id}')">{addr_hex}:</a></span>
@@ -2180,18 +2193,26 @@ def build_master_html():
             target = instr["target"]
 
             if target is not None:
-                if mod["start"] <= target < mod["start"] + len(mod_data["config"]["file"]):
-                    target_id = f"{pfx}_{target:04X}" if pfx else f"{target:04X}"
-                    target_hex = f"{target:04X}"
-                    if f"${target:04X}" in op_html:
-                        op_html = op_html.replace(f"${target:04X}", f'<a class="target-link" href="#{target_id}" onclick="handleLinkClick(event, \'{dom_id}\', \'{target_id}\')">${target_hex}</a>')
+                target_hex = f"{target:04X}"
+                target_id = None
+
+                # A. Cible dans le module courant
+                if cfg["start"] <= target < cfg["end"]:
+                    target_id = f"{pfx}_{target_hex}" if pfx else target_hex
+                # B. Cible dans le Moteur Résident ($0A00 - $1EFF)
+                elif 0x0A00 <= target < 0x1F00:
+                    target_id = target_hex
+                # C. Cible dans la Bibliothèque GFX & Audio ($6000 - $76FF)
+                elif 0x6000 <= target < 0x7700:
+                    target_id = target_hex
+                # D. Registres matériels Apple II ($C000 - $CFFF)
                 elif target in APPLE2_HARDWARE:
                     hw_sym, _ = APPLE2_HARDWARE[target]
                     op_html += f' <span style="color:var(--c-hw); font-weight:700;">({hw_sym})</span>'
-                elif 0x0A00 <= target <= 0x0A66:
-                    op_html = op_html.replace(f"${target:04X}", f'<a class="target-link" href="#{target:04X}" onclick="handleLinkClick(event, \'{dom_id}\', \'{target:04X}\')">${target:04X}</a>')
-                elif 0x6000 <= target < 0x7700:
-                    op_html = op_html.replace(f"${target:04X}", f'<a class="target-link" href="#{target:04X}" onclick="handleLinkClick(event, \'{dom_id}\', \'{target:04X}\')">${target:04X}</a>')
+
+                # Si target_id est déterminé, transformer l'opérande en lien hypertexte cliquable
+                if target_id and f"${target_hex}" in op_html:
+                    op_html = op_html.replace(f"${target_hex}", f'<a class="target-link" href="#{target_id}" onclick="handleLinkClick(event, \'{dom_id}\', \'{target_id}\')">${target_hex}</a>')
 
             # 4. Commentaires et annotations
             # Badge visuel pour les branches courts (BEQ, BNE, BCC, BCS, BMI, BPL...)
@@ -2207,7 +2228,7 @@ def build_master_html():
                     else:
                         branch_badge = f' <span class="branch-pill loop" data-target="{target_id}" onclick="handleLinkClick(event, \'{dom_id}\', \'{target_id}\')" title="Boucle infinie sur place">🔄 Sur place</span>'
 
-            comment_text = DETAILED_LINE_COMMENTS.get(addr, "")
+            comment_text = DETAILED_LINE_COMMENTS.get(dom_id, "") or DETAILED_LINE_COMMENTS.get(addr, "")
             comment_class = "line-comment"
 
             if not comment_text and target in APPLE2_HARDWARE:
@@ -2240,7 +2261,7 @@ def build_master_html():
     let lastCallerAddr = null;
     let currentModuleFilter = 'all';
 
-    function switchLevelView(modId) {
+    function switchLevelView(modId, autoScroll = true) {
       currentModuleFilter = modId;
       document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
       const activeTab = document.getElementById('tab-' + modId);
@@ -2253,9 +2274,10 @@ def build_master_html():
         blocks.forEach(b => {
           b.style.display = (b.dataset.module === modId) ? '' : 'none';
         });
-        // Défilement automatique vers le haut du module
-        const hero = document.getElementById('HERO_' + modId);
-        if (hero) hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (autoScroll) {
+          const hero = document.getElementById('HERO_' + modId);
+          if (hero) hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
     }
 
@@ -2405,10 +2427,16 @@ def build_master_html():
       const el = resolveElement(target);
 
       if (el) {
-        // Si le module parent est masqué par le filtre, réactiver le filtre approprié ou 'all'
+        // Détecter le module parent
         const parentMod = el.closest('.module-block');
-        if (parentMod && parentMod.style.display === 'none') {
-          switchLevelView('all');
+        if (parentMod) {
+          const modId = parentMod.dataset.module;
+          // Si le module cible est masqué par le filtre d'onglets, basculer sur ce module sans écraser le scroll
+          if (currentModuleFilter !== 'all' && currentModuleFilter !== modId) {
+            switchLevelView(modId, false);
+          } else if (parentMod.style.display === 'none') {
+            switchLevelView('all', false);
+          }
         }
 
         highlightLine(el);
